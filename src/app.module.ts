@@ -4,9 +4,10 @@ import { AppService } from './app.service';
 import { ProductsModule } from './products/products.module';
 import { LoggerMiddleware } from './logger-middleware/logger-middleware';
 import { ProductsController } from './products/products.controller';
+import { UsersModule } from './users/users.module';
 
 @Module({
-  imports: [ProductsModule],
+  imports: [ProductsModule, UsersModule],
   controllers: [AppController],
   providers: [AppService],
 })
