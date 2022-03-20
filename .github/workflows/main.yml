@@ -1,18 +1,21 @@
 name: Electronic shop backend NestJS
-on: 
-  push
+on:
+  push:
+    branches:
+      - '**'
   pull_request:
-    branches: [ master ]
-jobs: 
+    branches:
+      - 'master'
+jobs:
   build:
     runs-on: ubuntu-latest
-    steps: 
-      - uses: actions/checkout@v2 
+    steps:
+      - uses: actions/checkout@v2
       - name: Use Node.js 14.x
         uses: actions/setup-node@v1
         with:
           node-version: 14.x
-      
+
       - name: setup
         run: npm ci
 
