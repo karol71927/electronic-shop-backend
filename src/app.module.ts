@@ -6,9 +6,17 @@ import { LoggerMiddleware } from './logger-middleware/logger-middleware';
 import { ProductsController } from './products/products.controller';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+import { DatabaseModule } from './database/database.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [ProductsModule, UsersModule, AuthModule],
+  imports: [
+    DatabaseModule,
+    ProductsModule,
+    AuthModule,
+    UsersModule,
+    ConfigModule.forRoot(),
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
