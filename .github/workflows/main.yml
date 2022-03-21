@@ -23,6 +23,12 @@ jobs:
           DATABASE_HOST: ${{ secrets.dbHost }}
           DATABASE_PORT: ${{ secrets.dbPort }}
           DATABASE: ${{ secrets.dbName }}
+        run: |
+          echo $DATABASE_USER | base64 --decode > .env &&
+          echo $DATABASE_PASSWORD | base64 --decode >> .env &&
+          echo $DATABASE_HOST | base64 --decode >> .env &&
+          echo $DATABASE_PORT | base64 --decode >> .env &&
+          echo $DATABASE | base64 --decode >> .env
 
       - name: setup
         run: npm ci
