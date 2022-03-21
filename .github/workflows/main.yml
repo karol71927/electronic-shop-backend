@@ -16,6 +16,14 @@ jobs:
         with:
           node-version: 14.x
 
+      - name: setup environment
+        env:
+          DATABASE_USER: ${{ secrets.dbUser }}
+          DATABASE_PASSWORD: ${{ secrets.dbPass }}
+          DATABASE_HOST: ${{ secrets.dbHost }}
+          DATABASE_PORT: ${{ secrets.dbPort }}
+          DATABASE: ${{ secrets.dbName }}
+
       - name: setup
         run: npm ci
 
