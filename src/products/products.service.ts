@@ -1,33 +1,34 @@
 import { Injectable } from '@nestjs/common';
-import { Product } from 'src/products/interfaces/product.interface';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateProductDto } from './dto/create-product.dto';
+import { Product } from './products.entity';
 
 @Injectable()
 export class ProductsService {
-  private products: Product[] = [];
+  constructor(
+    @InjectRepository(Product) private productsRepository: Repository<Product>,
+  ) {}
 
-  findAll(): Product[] {
-    return this.products;
+  findAll(): Promise<Product[]> {
+    return this.productsRepository.find();
   }
 
-  findOne(id: number): Product {
-    return this.products.filter((product) => product.id === id)[0];
+  findOne(id: number): Promise<Product> {
+    return this.productsRepository.findOne(id);
   }
 
   create(product: Product) {
-    this.products.push(product);
+    this.productsRepository.create(product);
   }
 
-  update(id: number, createProductDto: CreateProductDto) {
-    let foundProduct = this.products.find((product) => product.id === id);
-    let index = this.products.indexOf(foundProduct);
-    this.products.splice(index, 1, createProductDto);
+  async update(id: number, createProductDto: CreateProductDto) {
+    let product = await this.productsRepository.findOne(id);
+    product = createProductDto as unknown as Product;
+    return this.productsRepository.save(product);
   }
 
-  remove(id: number) {
-    let foundProduct = this.products.find((product) => product.id === id);
-    foundProduct.availability = false;
-    let index = this.products.indexOf(foundProduct);
-    this.products.splice(index, 1, foundProduct);
+  async remove(id: number): Promise<void> {
+    await this.productsRepository.delete(id);
   }
 }
