@@ -8,6 +8,8 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { DatabaseModule } from './database/database.module';
 import { ConfigModule } from '@nestjs/config';
+import { APP_GUARD } from '@nestjs/core';
+import { RolesGuard } from './roles/role.guard';
 import { CategoriesController } from './categories/categories.controller';
 import { CategoriesService } from './categories/categories.service';
 import { CategoriesModule } from './categories/categories.module';
@@ -38,7 +40,14 @@ import { ProductOrderModule } from './product-order/product-order.module';
     ProductOrderModule,
   ],
   controllers: [AppController, CategoriesController, CartsController, PersonalDataController, UserOrderController, ProductOrderController],
-  providers: [AppService, CategoriesService, CartsService, PersonalDataService, UserOrderService, ProductOrderService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
+    CategoriesService, CartsService, PersonalDataService, UserOrderService, ProductOrderService
+  ],  
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
