@@ -8,7 +8,7 @@ import {
   Put,
 } from '@nestjs/common';
 import { CreateProductDto } from 'src/products/dto/create-product.dto';
-import { Product } from 'src/products/interfaces/product.interface';
+import { Product } from './products.entity';
 import { ProductsService } from './products.service';
 
 @Controller('products')
@@ -27,7 +27,8 @@ export class ProductsController {
 
   @Post()
   async create(@Body() createProductDto: CreateProductDto) {
-    this.productService.create(createProductDto);
+    let product = createProductDto as unknown as Product;
+    this.productService.create(product);
   }
 
   @Put(':id')
