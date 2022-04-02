@@ -1,8 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { User } from './interfaces/user.interface';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { User } from './users.entity';
 
 @Injectable()
 export class UsersService {
+  constructor(
+    @InjectRepository(User) private usersRepository: Repository<User>,
+  ) {}
+
   private readonly users = [
     {
       id: 1,
@@ -20,7 +26,15 @@ export class UsersService {
 
   //curl -X POST http://localhost:3000/api/auth/login -d '{"username": "john", "password": "password", "email": "john@gmail.com"}' -H "Content-Type: application/json"
 
-  async findOne(username: string): Promise<User> {
-    return this.users.find((user) => (user.username = username));
+  async findOne(id: number): Promise<User> {
+    return this.usersRepository.findOne(id);
+  }
+
+  async findByUsername(username: string): Promise<User> {
+    return this.usersRepository.find({
+      where: {
+        login: username,
+      },
+    })[0];
   }
 }
