@@ -1,7 +1,13 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { Cart } from 'src/carts/carts.entity';
+import { Category } from 'src/categories/categories.entity';
+import { PersonalData } from 'src/personal-data/personal-data.entity';
+import { ProductOrder } from 'src/product-order/product-order.entity';
 import { Product } from 'src/products/products.entity';
+import { UserOrder } from 'src/user-order/user-order.entity';
+import { User } from 'src/users/users.entity';
 
 @Module({
   imports: [
@@ -16,7 +22,15 @@ import { Product } from 'src/products/products.entity';
           username: configService.get('DATABASE_USER'),
           password: configService.get('DATABASE_PASSWORD'),
           database: configService.get('DATABASE'),
-          entities: [Product],
+          entities: [
+            Product,
+            Category,
+            Cart,
+            UserOrder,
+            ProductOrder,
+            PersonalData,
+            User,
+          ],
         };
         return config;
       },

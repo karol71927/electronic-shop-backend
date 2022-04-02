@@ -39,15 +39,14 @@ import { ProductOrderModule } from './product-order/product-order.module';
     UserOrderModule,
     ProductOrderModule,
   ],
-  controllers: [AppController, CategoriesController, CartsController, PersonalDataController, UserOrderController, ProductOrderController],
+  controllers: [AppController],
   providers: [
     AppService,
     {
       provide: APP_GUARD,
       useClass: RolesGuard,
     },
-    CategoriesService, CartsService, PersonalDataService, UserOrderService, ProductOrderService
-  ],  
+  ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
