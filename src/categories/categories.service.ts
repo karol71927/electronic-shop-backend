@@ -19,8 +19,9 @@ export class CategoriesService {
     return this.categoriesRepository.findOne(id);
   }
 
-  create(category: Category) {
-    this.categoriesRepository.create(category);
+  async create(category: CreateCategoryDto): Promise<CreateCategoryDto> {
+    const created = await this.categoriesRepository.save(category);
+    return created;
   }
 
   async update(id: number, createCategoryDto: CreateCategoryDto) {

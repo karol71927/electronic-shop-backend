@@ -1,6 +1,13 @@
 import { Cart } from 'src/carts/carts.entity';
 import { UserOrder } from 'src/user-order/user-order.entity';
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToMany,
+  BeforeInsert,
+} from 'typeorm';
+import * as bcrypt from 'bcrypt';
 
 @Entity()
 export class User {
@@ -12,6 +19,12 @@ export class User {
 
   @Column()
   password: string;
+
+  @BeforeInsert()
+  async hashPassword() {
+    const salt: string = await bcrypt.genSalt();
+    this.password = await bcrypt.hash(this.password, salt);
+  }
 
   @Column()
   email: string;
