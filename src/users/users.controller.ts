@@ -1,9 +1,18 @@
-import { Body, Controller, Get, Param, Post, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { User } from './users.entity';
 import { UsersService } from './users.service';
 import { Cookies } from 'src/cookies.decorator';
+import { LocalAuthGuard } from 'src/auth/local-auth.guard';
 
 @ApiBearerAuth()
 @Controller('users')
@@ -20,7 +29,7 @@ export class UsersController {
   }
 
   @Post()
-  async create(@Body() createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  async create(@Body() createUserDto: CreateUserDto): Promise<User> {
+    return this.usersService.create(createUserDto);
   }
 }

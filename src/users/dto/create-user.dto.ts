@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import { IsEmail, IsNotEmpty } from 'class-validator';
 import { Role } from 'src/roles/role.enum';
 
@@ -6,6 +7,7 @@ export class CreateUserDto {
   login: string;
 
   @IsNotEmpty()
+  // @Exclude()
   password: string;
 
   @IsEmail()
