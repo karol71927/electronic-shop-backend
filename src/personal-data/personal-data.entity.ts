@@ -27,13 +27,17 @@ export class PersonalData {
   @Column()
   country: string;
 
-  @Column()
+  @Column({
+    name: 'zip_code',
+  })
   zipCode: string;
 
   @Column()
   phone: string;
 
   @OneToOne(() => User)
-  @JoinColumn()
+  @JoinColumn({
+    name: 'id',
+  })
   user: User;
 }

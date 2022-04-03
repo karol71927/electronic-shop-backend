@@ -19,14 +19,18 @@ export class CategoriesService {
     return this.categoriesRepository.findOne(id);
   }
 
-  create(category: Category) {
-    this.categoriesRepository.create(category);
+  async findByName(name: string): Promise<Category> {
+    return this.categoriesRepository.findOne({ name });
+  }
+
+  save(createCategoryDto: CreateCategoryDto) {
+    let category = createCategoryDto as unknown as Category;
+    this.categoriesRepository.save(category);
   }
 
   async update(id: number, createCategoryDto: CreateCategoryDto) {
-    let category = await this.categoriesRepository.findOne(id);
-    category = createCategoryDto as unknown as Category;
-    return this.categoriesRepository.save(category);
+    let category = createCategoryDto as unknown as Category;
+    return this.categoriesRepository.update(id, category);
   }
 
   async remove(id: number): Promise<void> {

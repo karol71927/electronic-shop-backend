@@ -13,22 +13,21 @@ import { ProductsService } from './products.service';
 
 @Controller('products')
 export class ProductsController {
-  constructor(private productService: ProductsService) {}
+  constructor(private productsService: ProductsService) {}
 
   @Get()
   async findAll(): Promise<Product[]> {
-    return this.productService.findAll();
+    return this.productsService.findAll();
   }
 
   @Get(':id')
   async findOne(@Param('id') id: number): Promise<Product> {
-    return this.productService.findOne(id);
+    return this.productsService.findOne(id);
   }
 
   @Post()
-  async create(@Body() createProductDto: CreateProductDto) {
-    let product = createProductDto as unknown as Product;
-    this.productService.create(product);
+  async save(@Body() createProductDto: CreateProductDto) {
+    this.productsService.save(createProductDto);
   }
 
   @Put(':id')
@@ -36,11 +35,11 @@ export class ProductsController {
     @Param('id') id: number,
     @Body() createProductDto: CreateProductDto,
   ) {
-    this.productService.update(id, createProductDto);
+    this.productsService.update(id, createProductDto);
   }
 
   @Delete(':id')
   async remove(@Param('id') id: number) {
-    this.productService.remove(id);
+    this.productsService.remove(id);
   }
 }
