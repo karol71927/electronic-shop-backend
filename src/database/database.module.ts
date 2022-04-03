@@ -6,7 +6,6 @@ import { Category } from 'src/categories/categories.entity';
 import { PersonalData } from 'src/personal-data/personal-data.entity';
 import { ProductOrder } from 'src/product-order/product-order.entity';
 import { Product } from 'src/products/products.entity';
-import { UserOrder } from 'src/user-order/user-order.entity';
 import { User } from 'src/users/users.entity';
 
 @Module({
@@ -22,15 +21,7 @@ import { User } from 'src/users/users.entity';
           username: configService.get('DATABASE_USER'),
           password: configService.get('DATABASE_PASSWORD'),
           database: configService.get('DATABASE'),
-          entities: [
-            Product,
-            Category,
-            Cart,
-            UserOrder,
-            ProductOrder,
-            PersonalData,
-            User,
-          ],
+          entities: [Product, Category, Cart, ProductOrder, PersonalData, User],
         };
         return config;
       },

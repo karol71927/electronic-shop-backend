@@ -19,14 +19,14 @@ export class PersonalDataService {
     return this.personalDataRepository.findOne(id);
   }
 
-  create(personalData: PersonalData) {
-    this.personalDataRepository.create(personalData);
+  save(createPersonalDataDto: CreatePersonalDataDto) {
+    let personalData = createPersonalDataDto as unknown as PersonalData;
+    this.personalDataRepository.save(personalData);
   }
 
   async update(id: number, createPersonalDataDto: CreatePersonalDataDto) {
-    let personalData = await this.personalDataRepository.findOne(id);
-    personalData = createPersonalDataDto as unknown as PersonalData;
-    return this.personalDataRepository.save(personalData);
+    let personalData = createPersonalDataDto as unknown as PersonalData;
+    return this.personalDataRepository.update(id, personalData);
   }
 
   async remove(id: number): Promise<void> {

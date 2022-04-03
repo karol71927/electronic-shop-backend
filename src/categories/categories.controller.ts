@@ -1,19 +1,45 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { Category } from './categories.entity';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 
 @Controller('categories')
 export class CategoriesController {
-  constructor(private readonly categoryService: CategoriesService) {}
-
-  @Post()
-  create(@Body() category: CreateCategoryDto): Promise<CreateCategoryDto> {
-    return this.categoryService.create(category);
-  }
+  constructor(private categoriesService: CategoriesService) {}
 
   @Get()
-  findAll(): Promise<Category[]> {
-    return this.categoryService.findAll();
+  async findAll(): Promise<Category[]> {
+    return this.categoriesService.findAll();
+  }
+
+  @Get(':id')
+  async findOne(@Param('id') id: number): Promise<Category> {
+    return this.categoriesService.findOne(id);
+  }
+
+  @Post()
+  async save(@Body() createCategoryDto: CreateCategoryDto) {
+    this.categoriesService.save(createCategoryDto);
+  }
+
+  @Put(':id')
+  async update(
+    @Param('id') id: number,
+    @Body() createCategoryDto: CreateCategoryDto,
+  ) {
+    this.categoriesService.update(id, createCategoryDto);
+  }
+
+  @Delete(':id')
+  async remove(@Param('id') id: number) {
+    this.categoriesService.remove(id);
   }
 }

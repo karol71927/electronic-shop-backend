@@ -13,7 +13,6 @@ import { RolesGuard } from './roles/role.guard';
 import { CategoriesModule } from './categories/categories.module';
 import { CartsModule } from './carts/carts.module';
 import { PersonalDataModule } from './personal-data/personal-data.module';
-import { UserOrderModule } from './user-order/user-order.module';
 import { ProductOrderModule } from './product-order/product-order.module';
 
 @Module({
@@ -26,7 +25,6 @@ import { ProductOrderModule } from './product-order/product-order.module';
     CategoriesModule,
     CartsModule,
     PersonalDataModule,
-    UserOrderModule,
     ProductOrderModule,
   ],
   controllers: [AppController],

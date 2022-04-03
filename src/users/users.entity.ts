@@ -1,5 +1,4 @@
 import { Cart } from 'src/carts/carts.entity';
-import { UserOrder } from 'src/user-order/user-order.entity';
 import {
   Entity,
   Column,
@@ -8,6 +7,7 @@ import {
   BeforeInsert,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { ProductOrder } from 'src/product-order/product-order.entity';
 
 @Entity()
 export class User {
@@ -35,6 +35,6 @@ export class User {
   @OneToMany(() => Cart, (cart) => cart.user)
   carts: Cart[];
 
-  @OneToMany(() => UserOrder, (userOrder) => userOrder.user)
-  userOrders: UserOrder[];
+  @OneToMany(() => ProductOrder, (productOrder) => productOrder.user)
+  productOrders: ProductOrder[];
 }
