@@ -7,6 +7,7 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   OneToMany,
+  JoinColumn,
 } from 'typeorm';
 
 @Entity()
@@ -29,6 +30,9 @@ export class Product {
   @Column()
   availability: boolean;
 
+  @JoinColumn({
+    name: 'category_id',
+  })
   @ManyToOne(() => Category, (category) => category.products)
   category: Category;
 
