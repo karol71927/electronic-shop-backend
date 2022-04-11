@@ -8,16 +8,25 @@ import {
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { ProductOrder } from 'src/product-order/product-order.entity';
+import { Exclude } from 'class-transformer';
+import { IsEmail, MinLength } from 'class-validator';
 
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({
+    nullable: false,
+    unique: true,
+  })
   login: string;
 
-  @Column()
+  @Column({
+    nullable: false,
+  })
+  @Exclude()
+  @MinLength(8)
   password: string;
 
   @BeforeInsert()
@@ -26,10 +35,16 @@ export class User {
     this.password = await bcrypt.hash(this.password, salt);
   }
 
-  @Column()
+  @Column({
+    nullable: false,
+    unique: true,
+  })
+  @IsEmail()
   email: string;
 
-  @Column()
+  @Column({
+    nullable: false,
+  })
   type: string;
 
   @OneToMany(() => Cart, (cart) => cart.user)
