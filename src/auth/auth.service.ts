@@ -24,7 +24,12 @@ export class AuthService {
   }
 
   async login(user: any) {
-    const payload = { username: user.login, sub: user.id };
+    const userDb = await this.usersService.findByUsername(user.login);
+    const payload = {
+      username: userDb.login,
+      userId: userDb.id,
+      userRole: userDb.type,
+    };
     return {
       access_token: this.jwtService.sign(payload),
     };

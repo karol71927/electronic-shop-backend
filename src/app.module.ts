@@ -14,6 +14,11 @@ import { CategoriesModule } from './categories/categories.module';
 import { CartsModule } from './carts/carts.module';
 import { PersonalDataModule } from './personal-data/personal-data.module';
 import { ProductOrderModule } from './product-order/product-order.module';
+import { CategoriesController } from './categories/categories.controller';
+import { UsersController } from './users/users.controller';
+import { CartsController } from './carts/carts.controller';
+import { ProductOrderController } from './product-order/product-order.controller';
+import { PersonalDataController } from './personal-data/personal-data.controller';
 
 @Module({
   imports: [
@@ -38,6 +43,16 @@ import { ProductOrderModule } from './product-order/product-order.module';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(LoggerMiddleware).forRoutes(ProductsController);
+    consumer
+      .apply(LoggerMiddleware)
+      .forRoutes(
+        ProductsController,
+        CategoriesController,
+        UsersController,
+        CartsController,
+        AppController,
+        ProductOrderController,
+        PersonalDataController,
+      );
   }
 }

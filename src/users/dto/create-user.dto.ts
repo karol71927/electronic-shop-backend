@@ -1,5 +1,5 @@
 import { Exclude } from 'class-transformer';
-import { IsEmail, IsNotEmpty } from 'class-validator';
+import { IsEmail, IsNotEmpty, MinLength } from 'class-validator';
 import { Role } from 'src/roles/role.enum';
 
 export class CreateUserDto {
@@ -7,7 +7,7 @@ export class CreateUserDto {
   login: string;
 
   @IsNotEmpty()
-  // @Exclude()
+  @MinLength(8)
   password: string;
 
   @IsEmail()

@@ -12,7 +12,7 @@ import { ApiBearerAuth } from '@nestjs/swagger';
 import { User } from './users.entity';
 import { UsersService } from './users.service';
 import { Cookies } from 'src/cookies.decorator';
-import { LocalAuthGuard } from 'src/auth/local-auth.guard';
+import { instanceToPlain } from 'class-transformer';
 
 @ApiBearerAuth()
 @Controller('users')
@@ -23,13 +23,14 @@ export class UsersController {
   async findOne(
     @Param('id') id: number,
     @Cookies('jwt') cookie: string,
-  ): Promise<User> {
-    console.log(cookie);
-    return this.usersService.findOne(id);
+  ): Promise<any> {
+    const user = instanceToPlain(await this.usersService.findOne(id));
+    return user;
   }
 
   @Post()
-  async create(@Body() createUserDto: CreateUserDto): Promise<User> {
-    return this.usersService.create(createUserDto);
+  async create(@Body() createUserDto: CreateUserDto): Promise<any> {
+    const user = instanceToPlain(await this.usersService.create(createUserDto));
+    return user;
   }
 }

@@ -6,8 +6,12 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { CreateProductDto } from 'src/products/dto/create-product.dto';
+import { Role } from 'src/roles/role.enum';
+import { Roles } from 'src/roles/roles.decorator';
 import { Product } from './products.entity';
 import { ProductsService } from './products.service';
 
@@ -26,11 +30,13 @@ export class ProductsController {
   }
 
   @Post()
+  @Roles(Role.Admin)
   async save(@Body() createProductDto: CreateProductDto) {
     this.productsService.save(createProductDto);
   }
 
   @Put(':id')
+  @Roles(Role.Admin)
   async update(
     @Param('id') id: number,
     @Body() createProductDto: CreateProductDto,
@@ -39,6 +45,7 @@ export class ProductsController {
   }
 
   @Delete(':id')
+  @Roles(Role.Admin)
   async remove(@Param('id') id: number) {
     this.productsService.remove(id);
   }
