@@ -28,10 +28,5 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       return user;
     }
     throw new NotFoundException('User with this id does not exist');
-    return {
-      userId: payload.userId,
-      username: payload.username,
-      role: payload.userRole,
-    };
   }
 }

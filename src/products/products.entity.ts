@@ -30,6 +30,12 @@ export class Product {
   @Column()
   availability: boolean;
 
+  @Column()
+  imageUrl: string;
+
+  @Column()
+  bestseller: boolean;
+
   @JoinColumn({
     name: 'category_id',
   })

@@ -30,7 +30,9 @@ export class AppController {
   @UseGuards(LocalAuthGuard)
   @Post('auth/login')
   async login(@Body() body, @Res({ passthrough: true }) response: Response) {
-    response.cookie('jwt', await this.authService.login(body));
+    response.cookie('jwt', await this.authService.login(body), {
+      httpOnly: true,
+    });
   }
 
   @UseGuards(JwtAuthGuard)

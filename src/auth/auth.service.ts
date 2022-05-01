@@ -30,8 +30,6 @@ export class AuthService {
       userId: userDb.id,
       userRole: userDb.type,
     };
-    return {
-      access_token: this.jwtService.sign(payload),
-    };
+    return this.jwtService.sign(payload);
   }
 }
