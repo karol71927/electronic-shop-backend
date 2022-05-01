@@ -8,13 +8,14 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-import { ApiParam, ApiQuery } from '@nestjs/swagger';
+import { ApiBody, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { CreateProductDto } from 'src/products/dto/create-product.dto';
 import { Role } from 'src/roles/role.enum';
 import { Roles } from 'src/roles/roles.decorator';
 import { Product } from './products.entity';
 import { ProductsService } from './products.service';
 
+@ApiTags('products')
 @Controller('products')
 export class ProductsController {
   constructor(private productsService: ProductsService) {}
@@ -56,6 +57,10 @@ export class ProductsController {
     return (await this.productsService.findAllRecommended()).slice(0, 20);
   }
 
+  @ApiParam({
+    name: 'id',
+    type: 'number',
+  })
   @Get(':id')
   async findOne(@Param('id') id: number): Promise<Product> {
     return this.productsService.findOne(id);
@@ -67,6 +72,10 @@ export class ProductsController {
     this.productsService.save(createProductDto);
   }
 
+  @ApiParam({
+    name: 'id',
+    type: 'number',
+  })
   @Put(':id')
   @Roles(Role.Admin)
   async update(
@@ -76,6 +85,10 @@ export class ProductsController {
     this.productsService.update(id, createProductDto);
   }
 
+  @ApiParam({
+    name: 'id',
+    type: 'number',
+  })
   @Delete(':id')
   @Roles(Role.Admin)
   async remove(@Param('id') id: number) {
