@@ -6,4 +6,6 @@ export class CreateProductDto {
   amount: number;
   category: string;
   availability: boolean;
+  imageUrl: string;
+  bestseller: boolean;
 }
