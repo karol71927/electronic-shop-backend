@@ -51,6 +51,11 @@ export class ProductsController {
     return this.productsService.findAllByCategory(categoryId, query);
   }
 
+  @Get('/recommended')
+  async findAllRecommended() {
+    return (await this.productsService.findAllRecommended()).slice(0, 20);
+  }
+
   @Get(':id')
   async findOne(@Param('id') id: number): Promise<Product> {
     return this.productsService.findOne(id);

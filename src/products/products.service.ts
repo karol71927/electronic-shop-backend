@@ -30,6 +30,12 @@ export class ProductsService {
     return entityManager.query(query);
   }
 
+  findAllRecommended(): Promise<Product[]> {
+    const query = `select p.* from product p \
+      where p.bestseller = 1`;
+    return getManager().query(query);
+  }
+
   findOne(id: number): Promise<Product> {
     return this.productsRepository.findOne(id);
   }
