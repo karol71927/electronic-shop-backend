@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CategoriesService } from 'src/categories/categories.service';
-import { Repository } from 'typeorm';
+import { getManager, Repository } from 'typeorm';
 import { CreateProductDto } from './dto/create-product.dto';
 import { Product } from './products.entity';
 
@@ -14,6 +14,20 @@ export class ProductsService {
 
   findAll(): Promise<Product[]> {
     return this.productsRepository.find();
+  }
+
+  findAllByCategory(categoryId: string, filters: any): Promise<Product[]> {
+    const entityManager = getManager();
+    const query = `select p.* from product p \
+      where p.category_id = ${categoryId} \
+      ${filters.priceLow ? `AND p.price >= ${filters.priceLow}` : ''}\
+      ${filters.priceHigh ? `AND p.price <= ${filters.priceHigh}` : ''}\
+      ${
+        filters.availability
+          ? `AND p.availability = ${filters.availability}`
+          : ''
+      }`;
+    return entityManager.query(query);
   }
 
   findOne(id: number): Promise<Product> {

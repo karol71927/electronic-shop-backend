@@ -6,9 +6,9 @@ import {
   Param,
   Post,
   Put,
-  UseGuards,
+  Query,
 } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { ApiParam, ApiQuery } from '@nestjs/swagger';
 import { CreateProductDto } from 'src/products/dto/create-product.dto';
 import { Role } from 'src/roles/role.enum';
 import { Roles } from 'src/roles/roles.decorator';
@@ -22,6 +22,33 @@ export class ProductsController {
   @Get()
   async findAll(): Promise<Product[]> {
     return this.productsService.findAll();
+  }
+
+  @ApiParam({
+    name: 'categoryId',
+    type: 'number',
+  })
+  @ApiQuery({
+    name: 'priceLow',
+    type: 'number',
+    required: false,
+  })
+  @ApiQuery({
+    name: 'priceHigh',
+    type: 'number',
+    required: false,
+  })
+  @ApiQuery({
+    name: 'availability',
+    type: 'number',
+    required: false,
+  })
+  @Get('category/:categoryId')
+  async findAllByCategory(
+    @Param('categoryId') categoryId: string,
+    @Query() query,
+  ): Promise<Product[]> {
+    return this.productsService.findAllByCategory(categoryId, query);
   }
 
   @Get(':id')
