@@ -30,7 +30,9 @@ export class Product {
   @Column()
   availability: boolean;
 
-  @Column()
+  @Column({
+    name: 'image_url',
+  })
   imageUrl: string;
 
   @Column()

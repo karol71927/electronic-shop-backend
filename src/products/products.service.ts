@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CategoriesService } from 'src/categories/categories.service';
-import { getManager, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { CreateProductDto } from './dto/create-product.dto';
 import { Product } from './products.entity';
 
@@ -16,24 +16,34 @@ export class ProductsService {
     return this.productsRepository.find();
   }
 
-  findAllByCategory(categoryId: string, filters: any): Promise<Product[]> {
-    const entityManager = getManager();
-    const query = `select p.* from product p \
-      where p.category_id = ${categoryId} \
-      ${filters.priceLow ? `AND p.price >= ${filters.priceLow}` : ''}\
-      ${filters.priceHigh ? `AND p.price <= ${filters.priceHigh}` : ''}\
-      ${
-        filters.availability
-          ? `AND p.availability = ${filters.availability}`
-          : ''
-      }`;
-    return entityManager.query(query);
+  async findAllByCategory(
+    categoryId: string,
+    filters: any,
+  ): Promise<Product[]> {
+    const query = this.productsRepository
+      .createQueryBuilder('product')
+      .where('product.category_id = :categoryId', { categoryId: categoryId });
+
+    if (filters.priceLow) {
+      query.andWhere('price >= :priceLow', { priceLow: filters.priceLow });
+    }
+    if (filters.priceHigh) {
+      query.andWhere('price <= :priceHigh', { priceHigh: filters.priceHigh });
+    }
+    if (filters.availability) {
+      query.andWhere('availability = :availability', {
+        availability: filters.availability,
+      });
+    }
+    return query.getMany();
   }
 
   findAllRecommended(): Promise<Product[]> {
-    const query = `select p.* from product p \
-      where p.bestseller = 1`;
-    return getManager().query(query);
+    return this.productsRepository
+      .createQueryBuilder('product')
+      .where('product.bestseller = 1')
+      .limit(20)
+      .getMany();
   }
 
   findOne(id: number): Promise<Product> {
