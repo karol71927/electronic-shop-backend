@@ -19,6 +19,7 @@ import { UsersController } from './users/users.controller';
 import { CartsController } from './carts/carts.controller';
 import { ProductOrderController } from './product-order/product-order.controller';
 import { PersonalDataController } from './personal-data/personal-data.controller';
+import { UserFavoritesModule } from './user-favorites/user-favorites.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { PersonalDataController } from './personal-data/personal-data.controller
     CartsModule,
     PersonalDataModule,
     ProductOrderModule,
+    UserFavoritesModule,
   ],
   controllers: [AppController],
   providers: [

@@ -10,6 +10,7 @@ import * as bcrypt from 'bcrypt';
 import { ProductOrder } from 'src/product-order/product-order.entity';
 import { Exclude } from 'class-transformer';
 import { IsEmail, MinLength } from 'class-validator';
+import { UserFavorite } from 'src/user-favorites/user-favorites.entity';
 
 @Entity()
 export class User {
@@ -52,4 +53,7 @@ export class User {
 
   @OneToMany(() => ProductOrder, (productOrder) => productOrder.user)
   productOrders: ProductOrder[];
+
+  @OneToMany(() => UserFavorite, (userFavorite) => userFavorite.user)
+  userFavorites: UserFavorite[];
 }
