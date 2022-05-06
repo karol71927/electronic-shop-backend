@@ -5,7 +5,7 @@ import { ProductsService } from 'src/products/products.service';
 import { User } from 'src/users/users.entity';
 import { UsersService } from 'src/users/users.service';
 import { Any, Repository } from 'typeorm';
-import { CreateUserFavoriteDto } from './dto/create-user-favorite';
+import { CreateUserFavoriteDto } from './dto/create-user-favorite.dto';
 import { UserFavorite } from './user-favorites.entity';
 
 @Injectable()
@@ -22,7 +22,6 @@ export class UserFavoritesService {
       .createQueryBuilder('uf')
       .innerJoinAndSelect('product', 'p', 'p.id = uf.product_id')
       .where('user_id = :userId', { userId: id });
-    console.log(query.getSql());
     return query.getRawMany();
   }
 

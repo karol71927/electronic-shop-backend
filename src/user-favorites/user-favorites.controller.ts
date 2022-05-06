@@ -1,6 +1,6 @@
 import { Controller, Get, Param, Post, Delete } from '@nestjs/common';
-import { CreateUserFavoriteDto } from './dto/create-user-favorite';
-import { GetUserFavoriteDto } from './dto/get-user-favorite';
+import { CreateUserFavoriteDto } from './dto/create-user-favorite.dto';
+import { GetUserFavoriteDto } from './dto/get-user-favorite.dto';
 import { UserFavoritesService } from './user-favorites.service';
 
 @Controller('user-favorites')
