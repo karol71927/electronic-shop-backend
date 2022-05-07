@@ -13,13 +13,15 @@ import { AppService } from './app.service';
 import { AuthService } from './auth/auth.service';
 import { LocalAuthGuard } from './auth/local-auth.guard';
 import { Response } from 'express';
-import { AuthGuard } from '@nestjs/passport';
+import { LoginUserDto } from './loginUser.dto';
+import { ConfigService } from '@nestjs/config';
 
 @Controller()
 export class AppController {
   constructor(
     private readonly appService: AppService,
     private authService: AuthService,
+    private readonly configService: ConfigService,
   ) {}
 
   @Get()
@@ -29,15 +31,18 @@ export class AppController {
 
   @UseGuards(LocalAuthGuard)
   @Post('auth/login')
-  async login(@Body() body, @Res({ passthrough: true }) response: Response) {
+  async login(
+    @Body() body: LoginUserDto,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    const expire = new Date(
+      Date.now() + parseInt(this.configService.get('JWT_EXPIRATION_TIME')),
+    );
+    console.log(expire);
     response.cookie('jwt', await this.authService.login(body), {
       httpOnly: true,
+      //maxAge: parseInt(this.configService.get('JWT_EXPIRATION_TIME')),
+      expires: expire,
     });
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Get('profile')
-  getProfile(@Request() req) {
-    return req.user;
   }
 }
