@@ -8,18 +8,19 @@ import {
   Logger,
   Body,
 } from '@nestjs/common';
-import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { AppService } from './app.service';
 import { AuthService } from './auth/auth.service';
 import { LocalAuthGuard } from './auth/local-auth.guard';
 import { Response } from 'express';
-import { AuthGuard } from '@nestjs/passport';
+import { LoginUserDto } from './loginUser.dto';
+import { ConfigService } from '@nestjs/config';
 
 @Controller()
 export class AppController {
   constructor(
     private readonly appService: AppService,
     private authService: AuthService,
+    private readonly configService: ConfigService,
   ) {}
 
   @Get()
@@ -29,15 +30,27 @@ export class AppController {
 
   @UseGuards(LocalAuthGuard)
   @Post('auth/login')
-  async login(@Body() body, @Res({ passthrough: true }) response: Response) {
-    response.cookie('jwt', await this.authService.login(body), {
+  async login(
+    @Body() body: LoginUserDto,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    const expire = new Date(
+      Date.now() +
+        parseInt(this.configService.get('JWT_EXPIRATION_TIME')) * 1000,
+    );
+    console.log(expire);
+    const jwt = await this.authService.login(body);
+    // response.setHeader(
+    //   'Set-Cookie',
+    //   `${jwt}; HttpOnly; Path=/; Max-Age=${this.configService.get(
+    //     'JWT_EXPIRATION_TIME',
+    //   )}; Secure; SameSite=None`,
+    // );
+    response.cookie('jwt', jwt, {
       httpOnly: true,
+      expires: expire,
+      secure: false,
+      sameSite: 'lax',
     });
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Get('profile')
-  getProfile(@Request() req) {
-    return req.user;
   }
 }

@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Role } from 'src/roles/role.enum';
 import { Repository } from 'typeorm';
@@ -31,10 +31,9 @@ export class UsersService {
       (await this.findByEmail(createUserDto.email)) ||
       (await this.findByUsername(createUserDto.login))
     ) {
-      throw new HttpException(
-        { message: 'Username or email already exists' },
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new BadRequestException({
+        message: 'Username or email already exists',
+      });
     }
     const userEntity = new User();
     userEntity.login = login;
@@ -42,6 +41,8 @@ export class UsersService {
     userEntity.password = password;
     userEntity.type = Role.User;
 
-    return await this.usersRepository.save(userEntity);
+    return await this.usersRepository.save(userEntity).catch((err) => {
+      throw new BadRequestException(err);
+    });
   }
 }

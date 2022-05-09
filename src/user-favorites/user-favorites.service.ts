@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from 'src/products/products.entity';
 import { ProductsService } from 'src/products/products.service';
@@ -16,6 +20,10 @@ export class UserFavoritesService {
     private readonly productsService: ProductsService,
     private readonly usersService: UsersService,
   ) {}
+
+  async findOne(id: number) {
+    return this.userFavoriteRepository.findOne(id);
+  }
 
   async findAllForUser(id: number): Promise<any> {
     const query = this.userFavoriteRepository
@@ -35,10 +43,19 @@ export class UserFavoritesService {
     userFavoriteEntity.user = await this.usersService.findOne(
       createUserFavoriteDto.userId,
     );
-    return this.userFavoriteRepository.save(userFavoriteEntity);
+    return this.userFavoriteRepository.save(userFavoriteEntity).catch((err) => {
+      throw new BadRequestException();
+    });
   }
 
-  async deleteUserFavorite(id: number): Promise<void> {
+  async deleteUserFavorite(id: number, userId: number): Promise<void> {
+    const found = await this.findOne(id);
+    if (!found) {
+      throw new BadRequestException();
+    }
+    if (found.userId !== userId) {
+      throw new UnauthorizedException();
+    }
     await this.userFavoriteRepository.delete(id);
   }
 }

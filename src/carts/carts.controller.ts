@@ -6,8 +6,13 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { JwtUserId } from 'src/jwt-user-id.decorator';
+import { Role } from 'src/roles/role.enum';
+import { Roles } from 'src/roles/roles.decorator';
 import { Cart } from './carts.entity';
 import { CartsService } from './carts.service';
 import { CreateCartDto } from './dto/create-cart.dto';
@@ -29,6 +34,8 @@ export class CartsController {
   }
 
   @Get('/user/:id')
+  @UseGuards(JwtAuthGuard)
+  @Roles(Role.User, Role.Admin)
   async findAllForUser(
     @Param('id') id: number,
   ): Promise<GetCartWithTotalPriceDto> {
@@ -41,7 +48,8 @@ export class CartsController {
   }
 
   @Post()
-  async save(@Body() createCartDto: CreateCartDto) {
+  async save(@JwtUserId() id: number, @Body() createCartDto: CreateCartDto) {
+    createCartDto.userId = id;
     this.cartsService.save(createCartDto);
   }
 
