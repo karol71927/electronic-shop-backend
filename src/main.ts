@@ -7,14 +7,13 @@ import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.int
 
 async function bootstrap() {
   const appOptions: NestApplicationOptions = {
-    cors: true,
     logger: ['log', 'warn', 'error'],
   };
 
   const app = await NestFactory.create(AppModule, appOptions);
 
   const corsOptions: CorsOptions = {
-    origin: '*',
+    origin: 'http://localhost:4200',
     credentials: true,
     allowedHeaders: 'Content-Type, Accept, Origin',
     preflightContinue: false,

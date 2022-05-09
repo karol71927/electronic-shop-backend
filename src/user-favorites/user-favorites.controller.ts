@@ -1,4 +1,7 @@
-import { Controller, Get, Param, Post, Delete } from '@nestjs/common';
+import { Controller, Get, Param, Post, Delete, Body } from '@nestjs/common';
+import { JwtUserId } from 'src/jwt-user-id.decorator';
+import { Role } from 'src/roles/role.enum';
+import { Roles } from 'src/roles/roles.decorator';
 import { CreateUserFavoriteDto } from './dto/create-user-favorite.dto';
 import { GetUserFavoriteDto } from './dto/get-user-favorite.dto';
 import { UserFavoritesService } from './user-favorites.service';
@@ -7,8 +10,9 @@ import { UserFavoritesService } from './user-favorites.service';
 export class UserFavoritesController {
   constructor(private readonly userFavoritesService: UserFavoritesService) {}
 
-  @Get('/user/:id')
-  async findAllForUser(@Param('id') id: number): Promise<GetUserFavoriteDto[]> {
+  @Get('')
+  @Roles(Role.User, Role.Admin)
+  async findAllForUser(@JwtUserId() id: number): Promise<GetUserFavoriteDto[]> {
     const raw = await this.userFavoritesService.findAllForUser(id);
     const dto: GetUserFavoriteDto[] = [];
     raw.forEach((value) => {
@@ -18,12 +22,18 @@ export class UserFavoritesController {
   }
 
   @Post('/')
-  async addFavorite(createUserFavoriteDto: CreateUserFavoriteDto) {
+  @Roles(Role.User, Role.Admin)
+  async addFavorite(
+    @Body() createUserFavoriteDto: CreateUserFavoriteDto,
+    @JwtUserId() userId: number,
+  ) {
+    createUserFavoriteDto.userId = userId;
     return this.userFavoritesService.addUserFavorite(createUserFavoriteDto);
   }
 
   @Delete('/:id')
-  async deleteFavorite(@Param('id') id: number) {
-    return this.userFavoritesService.deleteUserFavorite(id);
+  @Roles(Role.User, Role.Admin)
+  async deleteFavorite(@Param('id') id: number, @JwtUserId() userId: number) {
+    return this.userFavoritesService.deleteUserFavorite(id, userId);
   }
 }

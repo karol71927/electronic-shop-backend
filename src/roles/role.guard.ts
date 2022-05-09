@@ -25,11 +25,13 @@ export class RolesGuard implements CanActivate {
     if (!token) {
       return false;
     }
-    const decoded = jwt.verify(
-      token.access_token,
-      this.configService.get('JWT_SECRET'),
-    );
-    if ((<any>decoded).exp < new Date().getTime()) {
+    console.log(requiredRoles);
+    const decoded = jwt.verify(token, this.configService.get('JWT_SECRET'));
+    if (
+      (<any>decoded).exp - (<any>decoded).iat <
+      parseInt(this.configService.get('JWT_EXPIRATION_TIME'))
+    ) {
+      console.log('expired');
       return false;
     }
     return requiredRoles.some((role) => (<any>decoded).userRole.includes(role));

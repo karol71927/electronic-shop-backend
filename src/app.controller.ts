@@ -8,7 +8,6 @@ import {
   Logger,
   Body,
 } from '@nestjs/common';
-import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { AppService } from './app.service';
 import { AuthService } from './auth/auth.service';
 import { LocalAuthGuard } from './auth/local-auth.guard';
@@ -36,13 +35,22 @@ export class AppController {
     @Res({ passthrough: true }) response: Response,
   ) {
     const expire = new Date(
-      Date.now() + parseInt(this.configService.get('JWT_EXPIRATION_TIME')),
+      Date.now() +
+        parseInt(this.configService.get('JWT_EXPIRATION_TIME')) * 1000,
     );
     console.log(expire);
-    response.cookie('jwt', await this.authService.login(body), {
+    const jwt = await this.authService.login(body);
+    // response.setHeader(
+    //   'Set-Cookie',
+    //   `${jwt}; HttpOnly; Path=/; Max-Age=${this.configService.get(
+    //     'JWT_EXPIRATION_TIME',
+    //   )}; Secure; SameSite=None`,
+    // );
+    response.cookie('jwt', jwt, {
       httpOnly: true,
-      //maxAge: parseInt(this.configService.get('JWT_EXPIRATION_TIME')),
       expires: expire,
+      secure: false,
+      sameSite: 'lax',
     });
   }
 }

@@ -8,22 +8,22 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiCookieAuth } from '@nestjs/swagger';
 import { User } from './users.entity';
 import { UsersService } from './users.service';
-import { Cookies } from 'src/cookies.decorator';
 import { instanceToPlain } from 'class-transformer';
+import { JwtUserId } from 'src/jwt-user-id.decorator';
+import { Roles } from 'src/roles/roles.decorator';
+import { Role } from 'src/roles/role.enum';
 
-@ApiBearerAuth()
 @Controller('users')
+@ApiCookieAuth()
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
-  @Get(':id')
-  async findOne(
-    @Param('id') id: number,
-    @Cookies('jwt') cookie: string,
-  ): Promise<any> {
+  @Get()
+  @Roles(Role.User, Role.Admin)
+  async findOne(@JwtUserId() id: number): Promise<any> {
     const user = instanceToPlain(await this.usersService.findOne(id));
     return user;
   }

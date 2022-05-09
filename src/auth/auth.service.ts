@@ -25,15 +25,10 @@ export class AuthService {
   }
 
   async login(user: LoginUserDto) {
-    // const userDb = await this.validateUser(user.username, user.password);
-    // if (!userDb) {
-    //   throw new UnauthorizedException();
-    // }
-    const userDb = {
-      login: 'superuser',
-      id: 8,
-      type: 'user',
-    };
+    const userDb = await this.validateUser(user.username, user.password);
+    if (!userDb) {
+      throw new UnauthorizedException();
+    }
     const payload = {
       username: userDb.login,
       userId: userDb.id,

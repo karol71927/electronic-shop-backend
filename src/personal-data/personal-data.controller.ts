@@ -7,6 +7,9 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
+import { JwtUserId } from 'src/jwt-user-id.decorator';
+import { Role } from 'src/roles/role.enum';
+import { Roles } from 'src/roles/roles.decorator';
 import { CreatePersonalDataDto } from './dto/create-personal-data.dto';
 import { PersonalData } from './personal-data.entity';
 import { PersonalDataService } from './personal-data.service';
@@ -15,13 +18,9 @@ import { PersonalDataService } from './personal-data.service';
 export class PersonalDataController {
   constructor(private personalDataService: PersonalDataService) {}
 
-  @Get()
-  async findAll(): Promise<PersonalData[]> {
-    return this.personalDataService.findAll();
-  }
-
   @Get(':id')
-  async findOne(@Param('id') id: number): Promise<PersonalData> {
+  @Roles(Role.User, Role.Admin)
+  async findOne(@JwtUserId() id: number): Promise<PersonalData> {
     return this.personalDataService.findOne(id);
   }
 

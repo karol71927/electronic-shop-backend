@@ -7,8 +7,10 @@ import {
   Post,
   Put,
   Query,
+  Response,
 } from '@nestjs/common';
 import { ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { JwtUserId } from 'src/jwt-user-id.decorator';
 import { CreateProductDto } from 'src/products/dto/create-product.dto';
 import { Role } from 'src/roles/role.enum';
 import { Roles } from 'src/roles/roles.decorator';
@@ -63,7 +65,7 @@ export class ProductsController {
   })
   @Get(':id')
   async findOne(@Param('id') id: number): Promise<Product> {
-    return this.productsService.findOne(id);
+    return await this.productsService.findOne(id);
   }
 
   @Post()

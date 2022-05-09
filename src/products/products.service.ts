@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CategoriesService } from 'src/categories/categories.service';
 import { Repository } from 'typeorm';
@@ -55,7 +55,9 @@ export class ProductsService {
     product.category = await this.categoriesService.findByName(
       createProductDto.category,
     );
-    this.productsRepository.save(product);
+    this.productsRepository.save(product).catch((err) => {
+      throw new BadRequestException(err);
+    });
   }
 
   async update(id: number, createProductDto: CreateProductDto) {
@@ -63,10 +65,14 @@ export class ProductsService {
     product.category = await this.categoriesService.findByName(
       createProductDto.category,
     );
-    return this.productsRepository.update(id, product);
+    return this.productsRepository.update(id, product).catch((err) => {
+      throw new BadRequestException(err);
+    });
   }
 
   async remove(id: number): Promise<void> {
-    await this.productsRepository.delete(id);
+    await this.productsRepository.delete(id).catch((err) => {
+      throw new BadRequestException();
+    });
   }
 }
