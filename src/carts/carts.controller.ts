@@ -23,21 +23,11 @@ import { GetCartDto, GetCartWithTotalPriceDto } from './dto/get-cart.dto';
 export class CartsController {
   constructor(private cartsService: CartsService) {}
 
-  @Get()
-  async findAll(): Promise<Cart[]> {
-    return this.cartsService.findAll();
-  }
-
-  @Get(':id')
-  async findOne(@Param('id') id: number): Promise<Cart> {
-    return this.cartsService.findOne(id);
-  }
-
-  @Get('/user/:id')
+  @Get('')
   @UseGuards(JwtAuthGuard)
   @Roles(Role.User, Role.Admin)
   async findAllForUser(
-    @Param('id') id: number,
+    @JwtUserId() id: number,
   ): Promise<GetCartWithTotalPriceDto> {
     const raw = await this.cartsService.findAllForUser(id);
     const dto: GetCartDto[] = [];
