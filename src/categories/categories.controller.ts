@@ -6,7 +6,11 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { Role } from 'src/roles/role.enum';
+import { Roles } from 'src/roles/roles.decorator';
 import { Category } from './categories.entity';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
@@ -26,11 +30,15 @@ export class CategoriesController {
   }
 
   @Post()
+  @UseGuards(JwtAuthGuard)
+  @Roles(Role.Admin)
   async save(@Body() createCategoryDto: CreateCategoryDto) {
     this.categoriesService.save(createCategoryDto);
   }
 
   @Put(':id')
+  @UseGuards(JwtAuthGuard)
+  @Roles(Role.Admin)
   async update(
     @Param('id') id: number,
     @Body() createCategoryDto: CreateCategoryDto,
@@ -39,6 +47,8 @@ export class CategoriesController {
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
+  @Roles(Role.Admin)
   async remove(@Param('id') id: number) {
     this.categoriesService.remove(id);
   }

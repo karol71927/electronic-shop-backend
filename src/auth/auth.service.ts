@@ -34,6 +34,10 @@ export class AuthService {
       userId: userDb.id,
       userRole: userDb.type,
     };
-    return this.jwtService.sign(payload);
+
+    return {
+      jwt: this.jwtService.sign(payload),
+      payload: payload,
+    };
   }
 }

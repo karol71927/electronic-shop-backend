@@ -62,9 +62,8 @@ export class ProductsService {
 
   async update(id: number, createProductDto: CreateProductDto) {
     let product = createProductDto as unknown as Product;
-    product.category = await this.categoriesService.findByName(
-      createProductDto.category,
-    );
+    const found = await this.findOne(product.id);
+    product.categoryId = found.categoryId;
     return this.productsRepository.update(id, product).catch((err) => {
       throw new BadRequestException(err);
     });

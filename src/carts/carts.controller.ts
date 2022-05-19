@@ -48,17 +48,23 @@ export class CartsController {
   }
 
   @Post()
+  @UseGuards(JwtAuthGuard)
+  @Roles(Role.User, Role.Admin)
   async save(@JwtUserId() id: number, @Body() createCartDto: CreateCartDto) {
     createCartDto.userId = id;
     this.cartsService.save(createCartDto);
   }
 
   @Put(':id')
+  @UseGuards(JwtAuthGuard)
+  @Roles(Role.User, Role.Admin)
   async update(@Param('id') id: number, @Body() createCartDto: CreateCartDto) {
     this.cartsService.update(id, createCartDto);
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
+  @Roles(Role.User, Role.Admin)
   async remove(@Param('id') id: number) {
     this.cartsService.remove(id);
   }

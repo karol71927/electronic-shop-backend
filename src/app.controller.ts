@@ -46,11 +46,12 @@ export class AppController {
     //     'JWT_EXPIRATION_TIME',
     //   )}; Secure; SameSite=None`,
     // );
-    response.cookie('jwt', jwt, {
-      httpOnly: true,
+    response.cookie('jwt', jwt.jwt, {
+      httpOnly: false,
       expires: expire,
       secure: false,
       sameSite: 'lax',
     });
+    response.send(jwt.payload);
   }
 }

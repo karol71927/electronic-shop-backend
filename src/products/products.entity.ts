@@ -39,6 +39,11 @@ export class Product {
   @Column()
   bestseller: boolean;
 
+  @Column({
+    name: 'category_id',
+  })
+  categoryId: number;
+
   @JoinColumn({
     name: 'category_id',
   })
