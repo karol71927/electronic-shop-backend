@@ -6,7 +6,9 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { JwtUserId } from 'src/jwt-user-id.decorator';
 import { Role } from 'src/roles/role.enum';
 import { Roles } from 'src/roles/roles.decorator';
@@ -19,17 +21,22 @@ export class PersonalDataController {
   constructor(private personalDataService: PersonalDataService) {}
 
   @Get(':id')
+  @UseGuards(JwtAuthGuard)
   @Roles(Role.User, Role.Admin)
   async findOne(@JwtUserId() id: number): Promise<PersonalData> {
     return this.personalDataService.findOne(id);
   }
 
   @Post()
+  @UseGuards(JwtAuthGuard)
+  @Roles(Role.User, Role.Admin)
   async save(@Body() createPersonalDataDto: CreatePersonalDataDto) {
     this.personalDataService.save(createPersonalDataDto);
   }
 
   @Put(':id')
+  @UseGuards(JwtAuthGuard)
+  @Roles(Role.User, Role.Admin)
   async update(
     @Param('id') id: number,
     @Body() createPersonalDataDto: CreatePersonalDataDto,
@@ -38,6 +45,8 @@ export class PersonalDataController {
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
+  @Roles(Role.User, Role.Admin)
   async remove(@Param('id') id: number) {
     this.personalDataService.remove(id);
   }
