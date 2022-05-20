@@ -4,7 +4,7 @@ export class CreateCartDto {
   @ApiProperty({
     required: false,
   })
-  userId: number;
+  userId?: number;
   @ApiProperty()
   productId: number;
   @ApiProperty()

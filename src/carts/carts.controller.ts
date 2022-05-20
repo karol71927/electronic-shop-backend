@@ -42,14 +42,19 @@ export class CartsController {
   @Roles(Role.User, Role.Admin)
   async save(@JwtUserId() id: number, @Body() createCartDto: CreateCartDto) {
     createCartDto.userId = id;
-    this.cartsService.save(createCartDto);
+    return this.cartsService.save(createCartDto);
   }
 
   @Put(':id')
   @UseGuards(JwtAuthGuard)
   @Roles(Role.User, Role.Admin)
-  async update(@Param('id') id: number, @Body() createCartDto: CreateCartDto) {
-    this.cartsService.update(id, createCartDto);
+  async update(
+    @Param('id') id: number,
+    @Body() createCartDto: CreateCartDto,
+    @JwtUserId() userId: number,
+  ) {
+    createCartDto.userId = userId;
+    return this.cartsService.update(id, createCartDto);
   }
 
   @Delete(':id')

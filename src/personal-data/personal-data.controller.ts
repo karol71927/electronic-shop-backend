@@ -20,34 +20,38 @@ import { PersonalDataService } from './personal-data.service';
 export class PersonalDataController {
   constructor(private personalDataService: PersonalDataService) {}
 
-  @Get(':id')
+  @Get('')
   @UseGuards(JwtAuthGuard)
   @Roles(Role.User, Role.Admin)
   async findOne(@JwtUserId() id: number): Promise<PersonalData> {
     return this.personalDataService.findOne(id);
   }
 
-  @Post()
+  @Post('')
   @UseGuards(JwtAuthGuard)
   @Roles(Role.User, Role.Admin)
-  async save(@Body() createPersonalDataDto: CreatePersonalDataDto) {
+  async save(
+    @Body() createPersonalDataDto: CreatePersonalDataDto,
+    @JwtUserId() id: number,
+  ) {
+    createPersonalDataDto.id = id;
     this.personalDataService.save(createPersonalDataDto);
   }
 
-  @Put(':id')
+  @Put('')
   @UseGuards(JwtAuthGuard)
   @Roles(Role.User, Role.Admin)
   async update(
-    @Param('id') id: number,
+    @JwtUserId() id: number,
     @Body() createPersonalDataDto: CreatePersonalDataDto,
   ) {
     this.personalDataService.update(id, createPersonalDataDto);
   }
 
-  @Delete(':id')
+  @Delete('')
   @UseGuards(JwtAuthGuard)
   @Roles(Role.User, Role.Admin)
-  async remove(@Param('id') id: number) {
+  async remove(@JwtUserId() id: number) {
     this.personalDataService.remove(id);
   }
 }
