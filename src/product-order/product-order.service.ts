@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { CartsService } from 'src/carts/carts.service';
 import { ProductsService } from 'src/products/products.service';
 import { UsersService } from 'src/users/users.service';
-import { Repository } from 'typeorm';
+import { Connection, Repository } from 'typeorm';
 import { CreateProductOrderDto } from './dto/product-order.dto';
 import { ProductOrder } from './product-order.entity';
 
@@ -10,9 +11,11 @@ import { ProductOrder } from './product-order.entity';
 export class ProductOrderService {
   constructor(
     @InjectRepository(ProductOrder)
-    private productOrderRepository: Repository<ProductOrder>,
+    private readonly productOrderRepository: Repository<ProductOrder>,
     private readonly usersService: UsersService,
     private readonly productsService: ProductsService,
+    private readonly cartService: CartsService,
+    private readonly connection: Connection,
   ) {}
 
   findAll(): Promise<ProductOrder[]> {
@@ -21,6 +24,45 @@ export class ProductOrderService {
 
   findOne(id: number): Promise<ProductOrder> {
     return this.productOrderRepository.findOne(id);
+  }
+
+  async findAllForUser(userId: number) {
+    const query = this.productOrderRepository
+      .createQueryBuilder('po')
+      .innerJoinAndSelect('product', 'p', 'p.id = po.product_id')
+      .where('po.user_id = :userId', { userId: userId })
+      .orderBy('po.date', 'DESC');
+    console.log(query.getSql());
+    return query.getRawMany();
+  }
+
+  async saveOrders(userId: number) {
+    const carts = await this.cartService.findForUser(userId);
+    const date = new Date();
+    const productOrders: ProductOrder[] = carts.map((cart) => {
+      let productOrder = new ProductOrder();
+      productOrder.productId = cart.productId;
+      productOrder.userId = userId;
+      productOrder.amount = cart.amount;
+      productOrder.date = date;
+      return productOrder;
+    });
+    const queryRunner = this.connection.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      for (let productOrder of productOrders) {
+        await queryRunner.manager.save(productOrder);
+      }
+      for (let cart of carts) {
+        await queryRunner.manager.remove(cart);
+      }
+      await queryRunner.commitTransaction();
+    } catch (err) {
+      await queryRunner.rollbackTransaction();
+    } finally {
+      await queryRunner.release();
+    }
   }
 
   async save(createProductOrderDto: CreateProductOrderDto) {

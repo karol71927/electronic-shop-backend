@@ -13,11 +13,21 @@ export class Cart {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column({
+    name: 'user_id',
+  })
+  userId: number;
+
   @JoinColumn({
     name: 'user_id',
   })
   @ManyToOne(() => User, (user) => user.carts)
   user: User;
+
+  @Column({
+    name: 'product_id',
+  })
+  productId: number;
 
   @JoinColumn({
     name: 'product_id',

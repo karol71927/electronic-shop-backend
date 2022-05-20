@@ -1,5 +1,5 @@
 export class CreateProductOrderDto {
-  userId: number;
+  userId?: number;
   productId: number;
   amount: number;
   date: Date;
