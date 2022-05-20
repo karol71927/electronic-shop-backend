@@ -16,11 +16,21 @@ export class ProductOrder {
   @Column()
   amount: number;
 
+  @Column({
+    name: 'user_id',
+  })
+  userId: number;
+
   @JoinColumn({
     name: 'user_id',
   })
   @ManyToOne(() => User, (user) => user.id)
   user: User;
+
+  @Column({
+    name: 'product_id',
+  })
+  productId: number;
 
   @JoinColumn({
     name: 'product_id',

@@ -31,6 +31,10 @@ export class CartsService {
     return query.getRawMany();
   }
 
+  findForUser(id: number): Promise<Cart[]> {
+    return this.cartsRepository.find({ userId: id });
+  }
+
   calculateTotalPrice(items: GetCartDto[]): GetCartWithTotalPriceDto {
     const itemsWithPrice: GetCartWithTotalPriceDto = {
       totalPrice: 0,
