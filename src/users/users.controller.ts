@@ -4,6 +4,7 @@ import {
   Get,
   Param,
   Post,
+  Put,
   Res,
   UseGuards,
 } from '@nestjs/common';
@@ -15,6 +16,8 @@ import { instanceToPlain } from 'class-transformer';
 import { JwtUserId } from 'src/jwt-user-id.decorator';
 import { Roles } from 'src/roles/roles.decorator';
 import { Role } from 'src/roles/role.enum';
+import { ChangePasswordDto } from './dto/change-password.dto';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('users')
 @ApiCookieAuth()
@@ -32,5 +35,15 @@ export class UsersController {
   async create(@Body() createUserDto: CreateUserDto): Promise<any> {
     const user = instanceToPlain(await this.usersService.create(createUserDto));
     return user;
+  }
+
+  @Put()
+  @UseGuards(JwtAuthGuard)
+  @Roles(Role.Admin, Role.User)
+  async changePassword(
+    @Body() changePasswordDto: ChangePasswordDto,
+    @JwtUserId() userId: number,
+  ) {
+    return this.usersService.changePassword(changePasswordDto, userId);
   }
 }

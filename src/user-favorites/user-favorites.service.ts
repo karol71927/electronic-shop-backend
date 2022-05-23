@@ -4,11 +4,9 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Product } from 'src/products/products.entity';
 import { ProductsService } from 'src/products/products.service';
-import { User } from 'src/users/users.entity';
 import { UsersService } from 'src/users/users.service';
-import { Any, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { CreateUserFavoriteDto } from './dto/create-user-favorite.dto';
 import { UserFavorite } from './user-favorites.entity';
 

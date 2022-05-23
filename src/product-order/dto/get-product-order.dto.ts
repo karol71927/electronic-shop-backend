@@ -15,9 +15,9 @@ export class GetProductOrderDto {
       orderDate: raw.po_date,
       productName: raw.p_name,
       productPrice: raw.p_price,
-      productAmount: raw.p_amount,
+      productAmount: raw.po_amount,
       productImageUrl: raw.p_image_url,
-      totalPrice: raw.p_amount * raw.p_price,
+      totalPrice: raw.po_amount * raw.p_price,
     };
     return dto;
   }
