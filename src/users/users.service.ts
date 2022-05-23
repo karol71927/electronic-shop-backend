@@ -2,8 +2,10 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Role } from 'src/roles/role.enum';
 import { Repository } from 'typeorm';
+import { ChangePasswordDto } from './dto/change-password.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './users.entity';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -42,6 +44,21 @@ export class UsersService {
     userEntity.type = Role.User;
 
     return await this.usersRepository.save(userEntity).catch((err) => {
+      throw new BadRequestException(err);
+    });
+  }
+
+  async changePassword(changePasswordDto: ChangePasswordDto, userId: number) {
+    let dbUser = await this.findOne(userId);
+    const isMatch = await bcrypt.compare(
+      changePasswordDto.password,
+      dbUser.password,
+    );
+    if (!isMatch) {
+      throw new BadRequestException('Bad password');
+    }
+    dbUser.password = changePasswordDto.newPassword;
+    return this.usersRepository.update(dbUser.id, dbUser).catch((err) => {
       throw new BadRequestException(err);
     });
   }

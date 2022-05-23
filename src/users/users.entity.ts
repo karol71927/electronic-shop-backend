@@ -5,6 +5,7 @@ import {
   PrimaryGeneratedColumn,
   OneToMany,
   BeforeInsert,
+  BeforeUpdate,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { ProductOrder } from 'src/product-order/product-order.entity';
@@ -31,6 +32,7 @@ export class User {
   password: string;
 
   @BeforeInsert()
+  @BeforeUpdate()
   async hashPassword() {
     const salt: string = await bcrypt.genSalt();
     this.password = await bcrypt.hash(this.password, salt);

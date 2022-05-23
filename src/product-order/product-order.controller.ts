@@ -38,7 +38,6 @@ export class ProductOrderController {
     const raw = await this.productOrderService.findAllForUser(userId);
     console.log(raw);
     const dto = raw.map((x) => GetProductOrderDto.convertRawToDto(x));
-    console.log(dto);
     return dto;
   }
 
